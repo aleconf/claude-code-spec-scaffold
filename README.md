@@ -86,6 +86,7 @@ Notice how short these files are. This is the point.
 ```text
 .
 ├── README.md                     # this file
+├── assets/                       # images used in README.md
 ├── CLAUDE.md                     # top-level instructions Claude reads every session
 ├── LICENSE
 ├── .gitignore
