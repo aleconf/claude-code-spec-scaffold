@@ -1,0 +1,24 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "ExitPlanMode",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR:?CLAUDE_PROJECT_DIR is not set}/.claude/hooks/require-plan-doc.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'INSTRUCTION: Before editing or writing code, you must invoke the karpathy-guidelines skill via the Skill tool. If this is a planning session, invoke grill-with-docs first.'"
+          }
+        ]
+      }
+    ]
+  }
+}
