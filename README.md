@@ -91,7 +91,8 @@ Notice how short these files are. This is the point.
 ├── LICENSE
 ├── .gitignore
 ├── .claude/
-│   ├── settings.json             # registers the hooks
+│   ├── settings.json             # registers the hooks and the status line
+│   ├── statusline-command.sh     # renders the customised Claude Code status line
 │   ├── skills/                   # behaviours Claude reads
 │   │   ├── grill-with-docs/      #   plan-grilling + glossary/ADR formats
 │   │   └── karpathy-guidelines/  #   minimum-viable-change discipline
@@ -130,8 +131,8 @@ Pick whichever fits:
 Fill in the "Project Overview" section in `CLAUDE.md`: see `example/CLAUDE.md` for inspiration.
 
 ```bash
-# Make hooks executable (required)
-chmod +x .claude/hooks/*.sh
+# Make the hooks and the status line script executable (required)
+chmod +x .claude/hooks/*.sh .claude/statusline-command.sh
 
 # Open Claude Code and try a planning session
 claude
@@ -160,6 +161,7 @@ The template has three extension points:
 - **`.claude/hooks/`** — Add `PreToolUse` / `PostToolUse` hooks via `.claude/settings.json`. The bundled `require-plan-doc.sh` is the pattern: a short shell script that exits `0` to allow or non-zero to block.
   
   **How the plan-doc gate works.** The goal is one fresh plan per session: each new planning session's *first* `ExitPlanMode` should block, forcing Claude to write that session's plan before it can exit. The hook implements this by comparing modification times. It passes only when some `docs/plan-*-YYYY-MM-DD.md` file is **newer** than the `.claude/.last_plan_exit` marker, and on every pass it advances the marker to the current time, which re-arms the gate: once the marker is newer than every existing plan file, the next session's first exit is blocked until a genuinely new plan is saved with a newer timestamp. Note that the gate checks only whether *some* matching plan file is newer than the marker, so manually editing or touching an old plan doc will satisfy the next exit even if no new plan was written.
+- **`.claude/statusline-command.sh`** — The customised status line. Claude Code runs this script (registered via `statusLine` in `.claude/settings.json`) to render the status line at the bottom of the session; edit it to change what is shown.
 - **`CLAUDE.md`** — Top-level instructions Claude reads every session. Keep it short; link out to skills and `CONTEXT.md` rather than inlining detail.
 
 ## Credits
